@@ -65,11 +65,10 @@ COUNTYFIPS AS 'CODE'
 ,CTY_NAME AS 'NAME'
 FROM [COUNTY]
 
---Query the COUNTY table and mod the name column (using || for SQL Lite concatenation)
+--Query the COUNTY table and mod the name column
 SELECT 
 COUNTYFIPS AS 'CODE'
---,CTY_NAME || ' County' AS 'NAME' --uses SQL Lite concatenation method, for w3schools
-,CTY_NAME + ' County' AS 'NAME' --SQL Server syntax, for sqlfiddle.com
+,CTY_NAME + ' County' AS 'NAME'
 FROM [COUNTY]
 
 --Query the CTU table with some manipulations
@@ -110,7 +109,7 @@ LEFT JOIN [COUNTY] ON [CTU].[CTYNUM]+27000 = [COUNTY].[COUNTYFIPS]
 --What if we want to know more about some duplicate names?
 SELECT
 FEATNAME
-,COUNT(FEATNAME) AS COUNT
+,COUNT(FEATNAME) AS 'COUNT'
 FROM [CTU]
 GROUP BY FEATNAME
 HAVING COUNT(FEATNAME) > 1
