@@ -56,21 +56,22 @@ INSERT INTO CTU (GNISTXT,FEATNAME,CTUTYPE,CTYNUM) VALUES ('02396511','Saint Paul
 /******END BUILD SCHEMA *********/
 ```
 ##### Query the city and county  tables
+The following sections are individual queries you can use against the above schema. Try them out!
 ```SQL
-
-/******INDIVIDUAL QUERIES *********/
 --Query the COUNTY table with some basic manipulations
 SELECT 
 COUNTYFIPS AS 'CODE'
 ,CTY_NAME AS 'NAME'
 FROM [COUNTY]
-
+```
+```SQL
 --Query the COUNTY table and mod the name column
 SELECT 
 COUNTYFIPS AS 'CODE'
 ,CTY_NAME + ' County' AS 'NAME'
 FROM [COUNTY]
-
+```
+```SQL
 --Query the CTU table with some manipulations
 SELECT
 '27' + CTYNUM + GNISTXT AS 'GNISID'
@@ -79,11 +80,13 @@ SELECT
 	ELSE FEATNAME
 END AS 'NAME'
 FROM [CTU]
-
+```
+```SQL
 --Join the two tables to see how all columns look together
 SELECT * FROM [CTU]
 LEFT JOIN [COUNTY] ON [CTU].[CTYNUM]+27000 = [COUNTY].[COUNTYFIPS]
-
+```
+```SQL
 --Now change some columns to get a customized view
 SELECT
 CTU.FEATNAME
@@ -92,7 +95,8 @@ CTU.FEATNAME
 ,COUNTY.CTY_NAME + ' County' AS COUNTY
 FROM [CTU]
 LEFT JOIN [COUNTY] ON [CTU].[CTYNUM]+27000 = [COUNTY].[COUNTYFIPS]
-
+```
+```SQL
 --Let's pull that all together
 SELECT 
 '27' + CTU.CTYNUM + CTU.GNISTXT AS GNISID
@@ -105,7 +109,8 @@ END AS 'NAME'
 ,COUNTY.CTY_NAME AS COUNTY
 FROM [CTU]
 LEFT JOIN [COUNTY] ON [CTU].[CTYNUM]+27000 = [COUNTY].[COUNTYFIPS]
-
+```
+```SQL
 --What if we want to know more about some duplicate names?
 SELECT
 FEATNAME
@@ -113,7 +118,8 @@ FEATNAME
 FROM [CTU]
 GROUP BY FEATNAME
 HAVING COUNT(FEATNAME) > 1
-
+```
+```SQL
 --so if we wanted to qualify township names with county names:
 SELECT 
 '27' + CTU.CTYNUM + CTU.GNISTXT AS GNISID
@@ -195,21 +201,24 @@ INSERT INTO SCHOOLS (ORGID,SCHNAME,ADDRESS,CITY,ZIP) VALUES (12909030000,'Roosev
 ```
 
 ##### Query the city and county  tables
+The following sections are individual queries for the above schema. Give 'em a whirl!
 ```SQL
-/******INDIVIDUAL QUERIES *********/
 --Get records from the school district table
 SELECT * FROM SCHOOL_DISTRICT
-
+```
+```SQL
 --Get TYPE 1 records from the school district table
 SELECT * FROM SCHOOL_DISTRICT WHERE TYPE = '01'
-
+```
+```SQL
 --Do some manipulations to get formatted IDs
 SELECT 
     ORGID
     ,NAME
     ,CONCAT(NUMBER,'-',TYPE) as formattedID
 FROM SCHOOL_DISTRICT
-
+```
+```SQL
 --Do a join to get the district office address
 SELECT 
     d.ORGID
@@ -218,26 +227,31 @@ SELECT
     ,CONCAT(s.ADDRESS,', ',s.CITY,', MN ',s.ZIP) as Address
 FROM SCHOOL_DISTRICT d
 LEFT JOIN SCHOOLS s ON d.ORGID = s.ORGID
-
+```
+```SQL
 --Get records from the schools table
 SELECT * FROM SCHOOLS
-
+```
+```SQL
 --Get just the schools, not the offices
 SELECT * FROM SCHOOLS
 WHERE ALT_NAME IS NULL
-
+```
+```SQL
 --Sort the schools by zip code
 SELECT * FROM SCHOOLS
 WHERE ALT_NAME IS NULL
 ORDER BY ZIP
-
+```
+```SQL
 --Do some column manipulations
 SELECT
     ORGID as schoolId
     ,SCHNAME as schoolName
     ,CONCAT(ADDRESS,', ',CITY,', MN ',ZIP) as Address
 FROM SCHOOLS
-
+```
+```SQL
 --Create a column for the districtID
 SELECT
     ORGID as schoolId
@@ -245,7 +259,8 @@ SELECT
     ,SCHNAME as schoolName
     ,CONCAT(ADDRESS,', ',CITY,', MN ',ZIP) as Address
 FROM SCHOOLS
-
+```
+```SQL
 --Use that calculation to figure out the name of the district
 SELECT
     s.ORGID as schoolId
@@ -255,7 +270,8 @@ SELECT
     ,CONCAT(s.ADDRESS,', ',s.CITY,', MN ',s.ZIP) as Address
 FROM SCHOOLS s
 LEFT JOIN SCHOOL_DISTRICT d ON d.ORGID = FLOOR(s.ORGID/1000000)*1000000 
-
+```
+```SQL
 --Get the formatted ID for the school
 SELECT
     s.ORGID as schoolId
@@ -266,7 +282,8 @@ SELECT
     ,CONCAT(s.ADDRESS,', ',s.CITY,', MN ',s.ZIP) as Address
 FROM SCHOOLS s
 LEFT JOIN SCHOOL_DISTRICT d ON d.ORGID = FLOOR(s.ORGID/1000000)*1000000
-
+```
+```SQL
 --But wait we don't want the 000 at the end of a district formatted ID
 SELECT
     s.ORGID as schoolId
