@@ -3,6 +3,10 @@ For dipping your toes into the SQL Pond!
 
 This repository is filled with examples of SQL code that can be used to build and explore data, focused on commonly used data in the State of Minnesota.
 
+## More Docs
+- For learning how to query file-based geodatabases (FGDB) with SQL, see the [File-based Geodatabase (FGDB) Queries](fgdb_queries.md) document.
+- Coming soon: intermediate SQL in ArcGIS Pro with GeoPackages
+
 ## SQL Playgrounds
 Want to test out this code? Try using one of the following:
 1. http://sqlfiddle.com/ : Has worked some tries, not so much others. Note you have to build the full schema (including inserts) before doing queries. When successful, links will be posted below.
