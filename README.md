@@ -237,7 +237,7 @@ INSERT INTO SCHOOLS (ORGID,SCHNAME,ADDRESS,CITY,ZIP) VALUES (12909030000,'Roosev
 /******END BUILD SCHEMA *********/
 ```
 
-##### Query the city and county  tables
+##### Query the school district and schools  tables
 The following sections are individual queries for the above schema. Give 'em a whirl!
 ```SQL
 --Get records from the school district table
