@@ -10,10 +10,11 @@ This repository is filled with examples of SQL code that can be used to build an
 ## SQL Playgrounds
 Want to test out this code? Try using one of the following:
 1. http://sqlfiddle.com/ : Has worked some tries, not so much others. Note you have to build the full schema (including inserts) before doing queries. When successful, links will be posted below.
-2. https://www.w3schools.com/sql/trysql.asp?filename=trysql_create_table : build a db in your browser (SQLite back end). Kind of tedious (inserts only one at a time for example), but works and has a quick Restore function
+2. https://www.w3schools.com/sql/trysql.asp?filename=trysql_create_table : build a db in your browser (SQLite back end). Kind of tedious (build one table at a time, and do inserts only one record at a time), but works and has a quick Restore function
 
 ### SQL Fiddle Links
 1. [A unique list of cities](http://sqlfiddle.com/#!18/da6d9/7/0) with manipulated names based on various conditions
+2. [The last query with the schools schema](http://sqlfiddle.com/#!18/c4f4e23/1/0) with various joins and condistions
 
 ### Formatted SQL Exercises
 In the sections below, you'll find SQL you can copy and paste into a website like sqlfiddle.com (be sure to switch to MS SQL Server style!). Build the schema first, then query it.
