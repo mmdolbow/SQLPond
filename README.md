@@ -1,25 +1,25 @@
 # SQLPond
 For dipping your toes into the SQL Pond!
 
-This repository is filled with examples of SQL code that can be used to build and explore data, focused on commonly used data in the State of Minnesota.
+This repository is filled with examples of SQL code that can be used to build and explore data, focused on commonly used data in the State of Minnesota. It has been used to teach various audiences (GIS professionals, non-programmer IT professionals) some basic SQL concepts
 
 ## More Docs
 - For learning how to query file-based geodatabases (FGDB) with SQL, see the [File-based Geodatabase (FGDB) Queries](fgdb_queries.md) document.
-- Coming soon: intermediate SQL in ArcGIS Pro with GeoPackages
+- Coming someday: intermediate SQL in ArcGIS Pro with GeoPackages
 
 ## SQL Playgrounds
 Want to test out this code? Try using one of the following:
-1. http://sqlfiddle.com/ : Has worked some tries, not so much others. Note you have to build the full schema (including inserts) before doing queries. When successful, links will be posted below.
-2. https://www.w3schools.com/sql/trysql.asp?filename=trysql_create_table : build a db in your browser (SQLite back end). Kind of tedious (build one table at a time, and do inserts only one record at a time), but works and has a quick Restore function
-3. https://www.db-fiddle.com/ : Tested with PostgreSQL v15 option, seems very performant. But also seems to run the entire schema build along with the query, not separately.
+1. [SQL Fiddle](http://sqlfiddle.com/): Has worked for small numbers of users at a time, not so much when more than 5 users hitting at the same time. Note you have to build the full schema (including inserts) before doing queries. When successful, links will be posted below.
+2. [DB Fiddle](https://www.db-fiddle.com/) : Tested with PostgreSQL v15 option, seems very performant. But also seems to run the entire schema build along with the query, not separately. The "collaborate" function looks like it could be good for teaching others.
+3. [W3 Schools](https://www.w3schools.com/sql/trysql.asp?filename=trysql_create_table) : build a db in your browser (SQLite back end). Kind of tedious (build one table at a time, and do inserts only one record at a time), but works and has a quick Restore function
 
 ### Fiddle Links
 The links below are to saved Fiddles that demonstrate some of the concepts shown in this tutorial.
-1. [A unique list of cities](http://sqlfiddle.com/#!18/da6d9/7/0) with manipulated names based on various conditions
-2. [The last query with the schools schema](http://sqlfiddle.com/#!18/c4f4e23/1/0) with various joins and condistions
+1. A unique list of cities with manipulated names based on various conditions [in sql fiddle](http://sqlfiddle.com/#!18/da6d9/7/0) and [in db-fiddle](https://www.db-fiddle.com/f/txETgLDtRzTvU6qmsuuRku/0)
+2. The last query with the schools schema with various joins and condistions [in sql fiddle](http://sqlfiddle.com/#!18/c4f4e23/1/0)  and [in db-fiddle](https://www.db-fiddle.com/f/gdF89vWi3FsVr8RC1TxFzo/0)
 
 ### Formatted SQL Exercises
-In the sections below, you'll find SQL you can copy and paste into a website like sqlfiddle.com (be sure to switch to MS SQL Server style!). Build the schema first, then query it.
+In the sections below, you'll find SQL you can copy and paste into a website like sqlfiddle.com (be sure to double check your database version! These have been tested with MS SQL Server in sqlfiddle.com and with PostgreSQL at db-fiddle.com). Build the schema first, then query it.
 
 #### Build and Query County and City database
 SQL to build and query a database of some common cities and counties in Minnesota.
