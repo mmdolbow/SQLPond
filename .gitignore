@@ -3,3 +3,4 @@ test.sqlite
 SQLite/Linux64/libstgeometry_sqlite.so
 SQLite/Windows32/stgeometry_sqlite.dll
 SQLite/Windows64/stgeometry_sqlite.dll
+base_pg_query.pgsql

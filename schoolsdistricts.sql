@@ -1,6 +1,8 @@
 /*Build and query a database of some school districts and schools in Minnesota
 This file is the space where we build and test this concept with SQL hints in an IDE. When we're finished,
 we dump the SQL into the readme for nicer formatting.
+
+Note some minor changes have been made in the readme to make these more compliant with both SQL server and PostgreSQL
  */
 
 /******BEGIN BUILD SCHEMA *********/
