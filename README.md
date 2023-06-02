@@ -22,7 +22,7 @@ The links below are to saved Fiddles that demonstrate some of the concepts shown
 In the sections below, you'll find SQL you can copy and paste into a website like sqlfiddle.com (be sure to double check your database version! These have been tested with MS SQL Server in sqlfiddle.com and with PostgreSQL at db-fiddle.com). Build the schema first, then query it.
 
 #### Build and Query County and City database
-SQL to build and query a database of some common cities and counties in Minnesota.
+SQL to build and query a database of some common cities (and townships and unorganized territories - aka CTUs) and counties in Minnesota. We create two very basic tables and populate them with just a sampling of records - if we wanted to add records for *every* county and city, we'd have 87 county rows and thousands of CTUs.
 ##### Build Schema
 ```SQL
 /******BEGIN BUILD SCHEMA *********/
@@ -68,12 +68,10 @@ The following sections are individual queries you can use against the above sche
 Techniques: Aliasing column names, conditional field calculations, string concatenation, joins, filtering with "WHERE", grouping, and subqueries
 
 ```SQL
---Query the COUNTY table with some basic manipulations
-SELECT 
-COUNTYFIPS AS "CODE"
-,CTY_NAME AS "NAME"
-FROM COUNTY;
+--Get all records from the COUNTY table
+SELECT * FROM COUNTY;
 ```
+
 ```SQL
 --Query the COUNTY table with a filter
 SELECT *
@@ -81,14 +79,39 @@ FROM COUNTY
 WHERE COUNTYFIPS > 27100
 ;
 ```
+Q: What does that WHERE clause above do exactly? Can you think of a reason to filter county records like this?
 
 ```SQL
---Query the COUNTY table and mod the name column
+--Query the COUNTY table with some basic manipulations
+SELECT 
+COUNTYFIPS AS "CODE"
+,CTY_NAME AS "NAME"
+FROM COUNTY;
+```
+
+
+```SQL
+--Query the COUNTY table and modify the name column
 SELECT 
 COUNTYFIPS AS "CODE"
 ,CONCAT(CTY_NAME, ' County') AS "NAME"
 FROM COUNTY;
 ```
+Can you imagine a situation where you'd want the word "County" at the end of each county record?
+
+```SQL
+--Get all records from the CTU table
+SELECT * FROM CTU;
+```
+
+```SQL
+--Query the CTU table with a filter
+SELECT *
+FROM CTU
+WHERE CTYNUM = '145'
+;
+```
+
 ```SQL
 --Query the CTU table with some manipulations
 SELECT
@@ -99,13 +122,8 @@ CONCAT('27',CTYNUM,GNISTXT) AS "GNISID"
 END AS "NAME"
 FROM CTU;
 ```
-```SQL
---Query the CTU table with a filter
-SELECT *
-FROM CTU
-WHERE CTYNUM = '145'
-;
-```
+Q: Can you think why would we need to build a more complex "GNISID" that incorporates county identifiers?
+
 ```SQL
 --Have some fun with column names and records
 SELECT
@@ -118,11 +136,12 @@ CONCAT('27',CTYNUM,GNISTXT) AS "GNISID"
 END AS "NAME"
 FROM CTU;
 ```
+Q: Have you seen counties identified with other codes before?
 
 ```SQL
 --Join the two tables to see how all columns look together
 SELECT * FROM CTU
-LEFT JOIN COUNTY ON CAST(CTU.CTYNUM AS INT)+27000 = COUNTY.COUNTYFIPS
+LEFT JOIN COUNTY ON CAST(CTU.CTYNUM AS INT)+27000 = COUNTY.COUNTYFIPS;
 ```
 ```SQL
 --Now change some columns to get a customized view
@@ -132,8 +151,10 @@ CTU.FEATNAME
 ,COUNTY.COUNTYFIPS
 ,CONCAT(COUNTY.CTY_NAME,' County') AS COUNTY
 FROM CTU
-LEFT JOIN COUNTY ON CAST(CTU.CTYNUM AS INT)+27000 = COUNTY.COUNTYFIPS
+LEFT JOIN COUNTY ON CAST(CTU.CTYNUM AS INT)+27000 = COUNTY.COUNTYFIPS;
 ```
+Q: Why do the column definitions look different now? What happens if we don't preface them with the table name?
+
 ```SQL
 --Let's pull that all together
 SELECT 
@@ -146,7 +167,7 @@ END AS "NAME"
 ,COUNTY.COUNTYFIPS
 ,COUNTY.CTY_NAME AS COUNTY
 FROM CTU
-LEFT JOIN COUNTY ON CAST(CTU.CTYNUM AS INT)+27000 = COUNTY.COUNTYFIPS
+LEFT JOIN COUNTY ON CAST(CTU.CTYNUM AS INT)+27000 = COUNTY.COUNTYFIPS;
 ```
 ```SQL
 --What if we want to know more about some duplicate names?
@@ -155,8 +176,10 @@ FEATNAME
 ,COUNT(FEATNAME) AS "COUNT"
 FROM CTU
 GROUP BY FEATNAME
-HAVING COUNT(FEATNAME) > 1
+HAVING COUNT(FEATNAME) > 1;
 ```
+Q: What does "HAVING" mean or do?
+
 ```SQL
 --so if we wanted to qualify township names with county names:
 SELECT 
@@ -175,8 +198,9 @@ LEFT JOIN (SELECT
 	FROM CTU
 	WHERE CTU.CTUTYPE = 'Township' --note we only care about townships
 	GROUP BY FEATNAME
-	HAVING COUNT(FEATNAME) > 1) AS DUPES ON CTU.FEATNAME = DUPES.FEATNAME
+	HAVING COUNT(FEATNAME) > 1) AS DUPES ON CTU.FEATNAME = DUPES.FEATNAME;
 ```
+Q: What is going on in the bottom half of these final two queries?
 
 ```SQL
 --or if we wanted to qualify ANY duplicate names with the county:
@@ -195,11 +219,11 @@ LEFT JOIN (SELECT
 	FEATNAME
 	FROM CTU --note we removed the WHERE clause filtering on ctutype
 	GROUP BY FEATNAME
-	HAVING COUNT(FEATNAME) > 1) AS DUPES ON CTU.FEATNAME = DUPES.FEATNAME
+	HAVING COUNT(FEATNAME) > 1) AS DUPES ON CTU.FEATNAME = DUPES.FEATNAME;
 ```
 
 #### Build and Query Schools and School District database
-SQL to build and query a database of some schools and districts in Minnesota.
+SQL to build and query a database of some schools and districts in Minnesota. Notice how we're building the schema in a slightly different order this time - that's OK!
 
 ##### Build Schema
 ```SQL
@@ -265,19 +289,21 @@ Techniques: string concatenation, filtering with "WHERE", joins, ordering, findi
 
 ```SQL
 --Get records from the school district table
-SELECT * FROM SCHOOL_DISTRICT
+SELECT * FROM SCHOOL_DISTRICT;
 ```
 ```SQL
 --Get TYPE 1 records from the school district table
-SELECT * FROM SCHOOL_DISTRICT WHERE TYPE = '01'
+SELECT * FROM SCHOOL_DISTRICT WHERE TYPE = '01';
 ```
+Q: Why is "type" important with these identifiers?
+
 ```SQL
 --Do some manipulations to get formatted IDs
 SELECT 
     ORGID
     ,NAME
     ,CONCAT(NUMBER,'-',TYPE) as formattedID
-FROM SCHOOL_DISTRICT
+FROM SCHOOL_DISTRICT;
 ```
 ```SQL
 --Do a join to get the district office address
@@ -287,22 +313,24 @@ SELECT
     ,CONCAT(d.NUMBER,'-',d.TYPE) as formattedID
     ,CONCAT(s.ADDRESS,', ',s.CITY,', MN ',s.ZIP) as Address
 FROM SCHOOL_DISTRICT d
-LEFT JOIN SCHOOLS s ON d.ORGID = s.ORGID
+LEFT JOIN SCHOOLS s ON d.ORGID = s.ORGID;
 ```
+Q: Wait - what do "d" and "s" mean in the query above?
+
 ```SQL
 --Get records from the schools table
-SELECT * FROM SCHOOLS
+SELECT * FROM SCHOOLS;
 ```
 ```SQL
 --Get just the schools, not the offices
 SELECT * FROM SCHOOLS
-WHERE ALT_NAME IS NULL
+WHERE ALT_NAME IS NULL;
 ```
 ```SQL
 --Sort the schools by zip code
 SELECT * FROM SCHOOLS
 WHERE ALT_NAME IS NULL
-ORDER BY ZIP
+ORDER BY ZIP;
 ```
 ```SQL
 --Do some column manipulations
@@ -310,7 +338,7 @@ SELECT
     ORGID as schoolId
     ,SCHNAME as schoolName
     ,CONCAT(ADDRESS,', ',CITY,', MN ',ZIP) as Address
-FROM SCHOOLS
+FROM SCHOOLS;
 ```
 ```SQL
 --Create a column for the districtID
@@ -319,8 +347,10 @@ SELECT
     ,FLOOR(ORGID/1000000)*1000000 as districtID
     ,SCHNAME as schoolName
     ,CONCAT(ADDRESS,', ',CITY,', MN ',ZIP) as Address
-FROM SCHOOLS
+FROM SCHOOLS;
 ```
+Q: What kind of assumption does this make about the school and district IDs?
+
 ```SQL
 --Use that calculation to figure out the name of the district
 SELECT
@@ -330,7 +360,7 @@ SELECT
     ,s.SCHNAME as schoolName
     ,CONCAT(s.ADDRESS,', ',s.CITY,', MN ',s.ZIP) as Address
 FROM SCHOOLS s
-LEFT JOIN SCHOOL_DISTRICT d ON d.ORGID = FLOOR(s.ORGID/1000000)*1000000 
+LEFT JOIN SCHOOL_DISTRICT d ON d.ORGID = FLOOR(s.ORGID/1000000)*1000000;
 ```
 ```SQL
 --Get the formatted ID for the school
@@ -342,8 +372,9 @@ SELECT
     ,s.SCHNAME as schoolName
     ,CONCAT(s.ADDRESS,', ',s.CITY,', MN ',s.ZIP) as Address
 FROM SCHOOLS s
-LEFT JOIN SCHOOL_DISTRICT d ON d.ORGID = FLOOR(s.ORGID/1000000)*1000000
+LEFT JOIN SCHOOL_DISTRICT d ON d.ORGID = FLOOR(s.ORGID/1000000)*1000000;
 ```
+Q: That "CONCAT" looks pretty complicated - break it down to understand what it does (the comment has hints)
 ```SQL
 --But wait we don't want the 000 at the end of a district formatted ID
 SELECT
@@ -356,5 +387,5 @@ SELECT
     ,s.SCHNAME as schoolName
     ,CONCAT(s.ADDRESS,', ',s.CITY,', MN ',s.ZIP) as Address
 FROM SCHOOLS s
-LEFT JOIN SCHOOL_DISTRICT d ON d.ORGID = FLOOR(s.ORGID/1000000)*1000000
+LEFT JOIN SCHOOL_DISTRICT d ON d.ORGID = FLOOR(s.ORGID/1000000)*1000000;
 ```
